@@ -1,13 +1,13 @@
 ﻿#include <iostream>
 
 using namespace std;
-
+template <typename T>
 class DArr
 {
 private:
 	int size = 0;
-	int* p_DArr = nullptr;
-	bool initialized = 0;
+	T* p_DArr = nullptr;
+	bool initialized = false;
 public:
 	DArr() {};
 
@@ -18,7 +18,7 @@ public:
 			try
 			{
 				this->size = size;
-				p_DArr = new int[size];
+				p_DArr = new T[size];
 				for (int i = 0; i < size; i++)
 				{
 					p_DArr[i] = i;
@@ -30,10 +30,10 @@ public:
 				cout << "Error: bad_alloc" << endl;
 			}
 		}
-		initialized = 1;
+		initialized = true;
 	}
 
-	DArr(DArr& copmas)
+	DArr(const DArr& copmas)
 	{
 		while (true)
 		{
@@ -42,12 +42,12 @@ public:
 				if (copmas.initialized)
 				{
 					this->size = copmas.size;
-					p_DArr = new int[size];
+					p_DArr = new T[size];
 					for (int i = 0; i < size; i++)
 					{
-						p_DArr[i] = copmas.GetArr(i);
+						this->p_DArr[i] = copmas.p_DArr[i];
 					}
-					this->initialized = 1;
+					this->initialized = true;
 				}
 				else
 				{
@@ -64,7 +64,8 @@ public:
 	}
 
 	friend DArr operator  + (const DArr& a, const DArr& b);
-
+	void operator = (const DArr& a);
+	
 
 	~DArr()
 	{
@@ -79,7 +80,7 @@ public:
 			try
 			{
 				this->size = size;
-				p_DArr = new int[size];
+				p_DArr = new T[size];
 				for (int i = 0; i < size; i++)
 				{
 					p_DArr[i] = 0;
@@ -91,12 +92,12 @@ public:
 				cout << "Error: bad_alloc" << endl;
 			}
 		}
-		initialized = 1;
+		initialized = true;
 	}
 
 
 
-	void SetArr(int index, int val)
+	void SetArr(int index, T val)
 	{
 		try
 		{
@@ -208,11 +209,29 @@ DArr operator + (const DArr& a, const DArr& b)
 	return temp;
 }
 
+void DArr::operator = (const DArr& a)
+{
+	if (a.initialized)
+	{
+		this->size = a.size;
+		p_DArr = new T[size];
+		for (int i = 0; i < size; i++)
+		{
+			this->p_DArr[i] = a.p_DArr[i];
+		}
+		this->initialized = true;
+	}
+	else
+	{
+		cout << "Error: Copied array does not initialize" << endl;
+	}
+}
+
 int main()
 {
-	DArr array(5);
-	DArr array2(array);
-	DArr array3(5);
+	DArr<int> array(5);
+	DArr<int> array2(array);
+	DArr<int> array3(5);
 	array3 = array + array2;
 	array3.show();
 	return 0;
