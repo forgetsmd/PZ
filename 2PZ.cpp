@@ -2,18 +2,14 @@
 
 using namespace std;
 
-template <typename T>
 class DArr
 {
 private:
-	int size;
-	T* p_DArr;
+	int size = 0;
+	int* p_DArr = nullptr;
 	bool initialized = 0;
 public:
-	DArr()
-	{
-		p_DArr = nullptr;
-	}
+	DArr() {};
 
 	DArr(int size)
 	{
@@ -22,10 +18,10 @@ public:
 			try
 			{
 				this->size = size;
-				p_DArr = new T[size];
+				p_DArr = new int[size];
 				for (int i = 0; i < size; i++)
 				{
-					p_DArr[i] = NULL;
+					p_DArr[i] = i;
 				}
 				break;
 			}
@@ -46,7 +42,7 @@ public:
 				if (copmas.initialized)
 				{
 					this->size = copmas.size;
-					p_DArr = new T[size];
+					p_DArr = new int[size];
 					for (int i = 0; i < size; i++)
 					{
 						p_DArr[i] = copmas.GetArr(i);
@@ -64,13 +60,17 @@ public:
 				cout << "Error: bad_alloc" << endl;
 			}
 		}
-		
+
 	}
+
+	friend DArr operator  + (const DArr& a, const DArr& b);
+
 
 	~DArr()
 	{
 		delete[] p_DArr;
 	}
+
 
 	void init(int size)
 	{
@@ -79,7 +79,7 @@ public:
 			try
 			{
 				this->size = size;
-				p_DArr = new T[size];
+				p_DArr = new int[size];
 				for (int i = 0; i < size; i++)
 				{
 					p_DArr[i] = 0;
@@ -96,7 +96,7 @@ public:
 
 
 
-	void SetArr(int index, T val)
+	void SetArr(int index, int val)
 	{
 		try
 		{
@@ -124,7 +124,7 @@ public:
 	{
 		try
 		{
-			if(index < 0 || index >= size)
+			if (index < 0 || index >= size)
 			{
 				throw std::out_of_range("Error: out of range");
 			}
@@ -140,7 +140,7 @@ public:
 	{
 		for (int i = 1; i <= size; i++)
 		{
-			cout << i << "	" << p_DArr[i-1] << endl;
+			cout << i << "	" << p_DArr[i - 1] << endl;
 		}
 	}
 
@@ -183,14 +183,37 @@ public:
 	}
 };
 
+DArr operator + (const DArr& a, const DArr& b)
+{
+	DArr temp;
+
+	if (a.size < b.size)
+	{
+		temp.init(a.size);
+		for (int i = 0; i < a.size; i++)
+		{
+			temp.p_DArr[i] = a.p_DArr[i] + b.p_DArr[i];
+		}
+	}
+
+	else
+	{
+		temp.init(b.size);
+		for (int i = 0; i < a.size; i++)
+		{
+			temp.p_DArr[i] = a.p_DArr[i] + b.p_DArr[i];
+		}
+	}
+
+	return temp;
+}
+
 int main()
 {
-	DArr<int> array;
-	array.init(5);
-	array.SetArr(6, 1);
-	array.SetArr(2, 101);
-	array.GetArr(6);
-	DArr<int> array2(array);
-	array2.show();
+	DArr array(5);
+	DArr array2(array);
+	DArr array3(5);
+	array3 = array + array2;
+	array3.show();
 	return 0;
 }
