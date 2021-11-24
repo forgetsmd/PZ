@@ -36,13 +36,27 @@ public:
     {
         for (int j = 0; j < numVer; j++)
         {
-            if (links[ver][j] == 1)
+            if (lastVer.empty())
             {
-                stk.push(j);
-                DFS(j);
+                if (links[ver][j] == 1)
+                {
+                    stk.push(j);
+                    lastVer.push(ver);
+                    DFS(j);
+                    lastVer.pop();
+                }
+            }
+            else
+            {
+                if (links[ver][j] == 1 && j != lastVer.top())
+                {
+                    stk.push(j);
+                    lastVer.push(ver);
+                    DFS(j);
+                    lastVer.pop();
+                }
             }
         }
-
     }
 
     void DFSTable()
@@ -73,13 +87,10 @@ public:
 
 private:
     int numVer;
+    stack <int> lastVer;
     stack <int> stk;
     vector<vector<int> > links;
 };
-
-
-
-
 
 int main()
 {
