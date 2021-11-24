@@ -8,9 +8,11 @@ using namespace std;
 class Graph
 {
 public:
-    Graph(int numVer)
+    Graph()
     {
-        this->numVer = numVer;
+        cout << "Enter a num of vertex: ";
+        cin >> numVer;
+        cin.ignore(256, '\n');
         links.assign(numVer, vector<int>(numVer));
     }
 
@@ -94,11 +96,7 @@ private:
 
 int main()
 {
-    int n = 0;
-    cout << "Enter a num of vertex: ";
-    cin >> n;
-    cin.ignore(256, '\n');
-    Graph graph(n);
+    Graph graph;
     graph.full();
     graph.DFSTable();
     graph.show();
