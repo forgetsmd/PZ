@@ -14,17 +14,19 @@ public:
         links.assign(numVer, vector<int>(numVer));
     }
 
-    void full() 
+    void full()
     {
+        string line;
+        string n;
         for (int i = 0; i < numVer; i++)
         {
-            cout << "Enter links for " << i+1 << ": ";
+            cout << "Enter links for " << i + 1 << ": ";
 
             getline(cin, line);
             stringstream ss(line);
             while (getline(ss, n, ' '))
             {
-                this->links[i][stoi(n)] = 1;
+                this->links[i][stoi(n)-1] = 1;
             }
         }
         cout << endl;
@@ -40,7 +42,7 @@ public:
                 DFS(j);
             }
         }
-        
+
     }
 
     void DFSTable()
@@ -48,7 +50,7 @@ public:
         for (int i = 0; i < numVer; i++)
         {
             DFS(i);
-            for (int s = 0; s < stk.size(); s++)
+            while (stk.size())
             {
                 links[i][stk.top()] = 1;
                 stk.pop();
@@ -60,6 +62,7 @@ public:
     {
         for (int i = 0; i < numVer; i++)
         {
+            links[i][i] = 1;
             for (int j = 0; j < numVer; j++)
             {
                 cout << links[i][j] << " ";
@@ -70,8 +73,6 @@ public:
 
 private:
     int numVer;
-    string line;
-    string n;
     stack <int> stk;
     vector<vector<int> > links;
 };
@@ -81,7 +82,7 @@ private:
 
 
 int main()
-{   
+{
     int n = 0;
     cout << "Enter a num of vertex: ";
     cin >> n;
